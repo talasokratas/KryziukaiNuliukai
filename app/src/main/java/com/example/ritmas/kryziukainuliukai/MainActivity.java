@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -47,67 +46,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
+    
     public void buttonPress(View v) {
-        switch (v.getId()) {
-            case R.id.imageButton0:
-                findViewById(R.id.imageButton0).setBackgroundResource(R.drawable.xgreen);
-                findViewById(R.id.imageButton0).setClickable(false);
-                board[0] = "X";
-                break;
-            case R.id.imageButton1:
-                findViewById(R.id.imageButton1).setBackgroundResource(R.drawable.xgreen);
-                findViewById(R.id.imageButton1).setClickable(false);
-                board[1] = "X";
-                break;
-            case R.id.imageButton2:
-                findViewById(R.id.imageButton2).setBackgroundResource(R.drawable.xgreen);
-                findViewById(R.id.imageButton2).setClickable(false);
-                board[2] = "X";
-                break;
-            case R.id.imageButton3:
-                findViewById(R.id.imageButton3).setBackgroundResource(R.drawable.xgreen);
-                findViewById(R.id.imageButton3).setClickable(false);
-                board[3] = "X";
-                break;
-            case R.id.imageButton4:
-                findViewById(R.id.imageButton4).setBackgroundResource(R.drawable.xgreen);
-                findViewById(R.id.imageButton4).setClickable(false);
-                board[4] = "X";
-                break;
-            case R.id.imageButton5:
-                findViewById(R.id.imageButton5).setBackgroundResource(R.drawable.xgreen);
-                findViewById(R.id.imageButton5).setClickable(false);
-                board[5] = "X";
-                break;
-            case R.id.imageButton6:
-                findViewById(R.id.imageButton6).setBackgroundResource(R.drawable.xgreen);
-                findViewById(R.id.imageButton6).setClickable(false);
-                board[6] = "X";
-                break;
-            case R.id.imageButton7:
-                findViewById(R.id.imageButton7).setBackgroundResource(R.drawable.xgreen);
-                findViewById(R.id.imageButton7).setClickable(false);
-                board[7] = "X";
-                break;
-            case R.id.imageButton8:
-                findViewById(R.id.imageButton8).setBackgroundResource(R.drawable.xgreen);
-                findViewById(R.id.imageButton8).setClickable(false);
-                board[8] = "X";
-                break;
+
+        findViewById(v.getId()).setBackgroundResource(R.drawable.xgreen);
+        findViewById(v.getId()).setClickable(false);
+
+        for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
+            Integer key = entry.getKey();
+            View value = entry.getValue();
+            if(entry.getValue().equals(findViewById(v.getId()))) {
+                board[entry.getKey()] = "X";
+            }
+
         }
-
-
-
-
 
         checkWinner();
         androidTurn();
         checkWinner();
-
-
-
 
     }
 
@@ -221,4 +177,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
+
+
 
