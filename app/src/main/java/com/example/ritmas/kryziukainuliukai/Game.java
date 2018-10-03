@@ -1,24 +1,26 @@
 package com.example.ritmas.kryziukainuliukai;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 public class Game extends AppCompatActivity {
 
-
-
-
     static String[] board;
-    static String turn;
     static Map<Integer, View> buttonMap = new HashMap<>();
+    static int countX;
+    static int countO;
+
 
 
 
@@ -28,8 +30,11 @@ public class Game extends AppCompatActivity {
         setContentView(R.layout.game);
 
         board = new String[9];
-
+        countO = 0;
+        countX = 0;
         mapViews();
+
+
 
 
 
@@ -73,6 +78,8 @@ public class Game extends AppCompatActivity {
             for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
                 entry.getValue().setClickable(false);
             }
+            updateCounter(checkWinner());
+
         }
     }
 
@@ -87,45 +94,51 @@ public class Game extends AppCompatActivity {
         toast.show();
     }
     static String checkWinner() {
-        for (int i = 0; i < 8; i++) {
-            String line = null;
-            switch (i) {
-                case 0:
-                    line = board[0] + board[1] + board[2];
-                    break;
-                case 1:
-                    line = board[3] + board[4] + board[5];
-                    break;
-                case 2:
-                    line = board[6] + board[7] + board[8];
-                    break;
-                case 3:
-                    line = board[0] + board[3] + board[6];
-                    break;
-                case 4:
-                    line = board[1] + board[4] + board[7];
-                    break;
-                case 5:
-                    line = board[2] + board[5] + board[8];
-                    break;
-                case 6:
-                    line = board[0] + board[4] + board[8];
-                    break;
-                case 7:
-                    line = board[2] + board[4] + board[6];
-                    break;
-            }
-            if (line.equals("XXX")) {
-                winnerCombo(i,R.drawable.xwon);
-                return "laimėjo X";
-            } else if (line.equals("OOO")) {
-                winnerCombo(i,R.drawable.circlewon);
-                return "laimėjo O";
-            }
-        }
+        if (Arrays.asList(board).contains(null)) {
+            for (int i = 0; i < 8; i++) {
+                String line = null;
+                switch (i) {
+                    case 0:
+                        line = board[0] + board[1] + board[2];
+                        break;
+                    case 1:
+                        line = board[3] + board[4] + board[5];
+                        break;
+                    case 2:
+                        line = board[6] + board[7] + board[8];
+                        break;
+                    case 3:
+                        line = board[0] + board[3] + board[6];
+                        break;
+                    case 4:
+                        line = board[1] + board[4] + board[7];
+                        break;
+                    case 5:
+                        line = board[2] + board[5] + board[8];
+                        break;
+                    case 6:
+                        line = board[0] + board[4] + board[8];
+                        break;
+                    case 7:
+                        line = board[2] + board[4] + board[6];
+                        break;
+                }
 
-        return null;
+                if (line.equals("XXX")) {
+                    winnerCombo(i, R.drawable.xwon);
+                    return "laimėjo X";
+                } else if (line.equals("OOO")) {
+                    winnerCombo(i, R.drawable.circlewon);
+                    return "laimėjo O";
+                }
+
+
+            }
+            return null;
+        } else return "Lygiosios";
     }
+
+
 
     static void winnerCombo(int i, int resource) {
         switch (i) {
@@ -193,6 +206,24 @@ public class Game extends AppCompatActivity {
             entry.getValue().setBackgroundResource(R.drawable.empty);
             entry.getValue().setClickable(true);
         }
+    }
+
+    public void mainMenu(View v) {
+        startActivity(new Intent(Game.this, MainActivity.class));
+    }
+
+    public void updateCounter(String winner) {
+        if(checkWinner() == "laimėjo X") {
+            countX++;
+        }
+        if(checkWinner() == "laimėjo O") {
+            countO++;
+        }
+        TextView textViewX = (TextView) findViewById(R.id.countxView);
+        TextView textViewO = (TextView) findViewById(R.id.countoView);
+        textViewX.setText(" " + countX);
+        textViewO.setText(" " + countO);
+
     }
 
 }
