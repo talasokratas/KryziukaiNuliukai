@@ -7,27 +7,34 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
+
 
 public class Game extends AppCompatActivity {
 
-    static String[] board;
+
     static Map<Integer, View> buttonMap = new HashMap<>();
+    static Player player1 = new Player("X", R.drawable.xgreen);
+    static Player player2 = new Player("O", R.drawable.circle);
+    static Computer andr1 = new Computer("O", R.drawable.circle);
+    static Computer andr2 = new Computer("X", R.drawable.xgreen);
+    static String[] board;
     static int countX;
     static int countO;
-
-
-
+    static int mode = 2;
+    static Results res = new Results();
+    static GameTools tools = new GameTools();
+    static int buttonCount = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
+
+        Bundle gameMode = getIntent().getExtras();
+        if(gameMode != null)
+            mode = gameMode.getInt("key");
 
         board = new String[9];
         countO = 0;
@@ -35,9 +42,70 @@ public class Game extends AppCompatActivity {
         mapViews();
 
 
+    }
 
 
 
+
+    public void buttonPress1(View gameboard) {
+
+        Context context = getApplicationContext();
+        View pressedButton = findViewById(gameboard.getId());
+
+        //player1.turn(pressedButton);
+        res.checkWinner();
+       //andro1.turn();
+        res.checkWinner();
+
+        if(res.checkWinner() != null) {
+            gameMessage(context, res.checkWinner());
+
+            for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
+                entry.getValue().setClickable(false);
+            }
+           updateCounter(res.checkWinner());
+
+        }
+    }
+
+
+
+
+
+
+    public void reset(View v) {
+        board = new String[9];
+        for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
+            entry.getValue().setBackgroundResource(R.drawable.empty);
+            entry.getValue().setClickable(true);
+        }
+    }
+
+    public void mainMenu(View v) {
+        startActivity(new Intent(Game.this, MainActivity.class));
+    }
+
+    public void updateCounter(String winner) {
+        if(winner == "laimėjo X") {
+            countX++;
+        }
+        if(winner == "laimėjo O") {
+            countO++;
+        }
+        TextView textViewX = findViewById(R.id.countxView);
+        TextView textViewO = findViewById(R.id.countoView);
+        textViewX.setText(" " + countX);
+        textViewO.setText(" " + countO);
+
+    }
+    static void gameMessage(Context context, String winner) {
+
+
+        CharSequence text = "Žaidimo rezultatas: " + winner;
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 
     public void mapViews() {
@@ -54,179 +122,55 @@ public class Game extends AppCompatActivity {
 
     }
 
+    public void buttonPress(View gameBoard) {
+        View pressedButton = findViewById(gameBoard.getId());
 
-    public void buttonPress(View v) {
+       Context context = getApplicationContext();
 
-        Context context = getApplicationContext();
 
-        findViewById(v.getId()).setBackgroundResource(R.drawable.xgreen);
-        findViewById(v.getId()).setClickable(false);
-
-        for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
-            if(entry.getValue().equals(findViewById(v.getId()))) {
-                board[entry.getKey()] = "X";
+        if (mode == 0) {
+            player1.turn(pressedButton);
+            res.checkWinner();
+            andr1.turn();
+            res.checkWinner();
+        } else if(mode == 1) {
+            if (buttonCount == 1) {
+                player1.turn(pressedButton);
+                buttonCount = 2;
+            } else {
+                player2.turn(pressedButton);
+                buttonCount = 1;
             }
-
+        } else if(mode == 2) {
+          // while (res.checkWinner() == null) {
+                andr2.turn();
+                res.checkWinner();
+                andr1.turn();
+                res.checkWinner();
+           // }
         }
 
-        checkWinner();
-        androidTurn();
-        checkWinner();
-        if(checkWinner() != null) {
-            gameMessage(context, checkWinner());
+
+        if(res.checkWinner() != null) {
+
+
+            gameMessage(context, res.checkWinner());
 
             for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
                 entry.getValue().setClickable(false);
             }
-            updateCounter(checkWinner());
+
+            updateCounter(res.checkWinner());
 
         }
     }
 
 
-    static void gameMessage(Context context, String winner) {
 
 
-        CharSequence text = "Žaidimo rezultatas: " + winner;
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-    }
-    static String checkWinner() {
-        if (Arrays.asList(board).contains(null)) {
-            for (int i = 0; i < 8; i++) {
-                String line = null;
-                switch (i) {
-                    case 0:
-                        line = board[0] + board[1] + board[2];
-                        break;
-                    case 1:
-                        line = board[3] + board[4] + board[5];
-                        break;
-                    case 2:
-                        line = board[6] + board[7] + board[8];
-                        break;
-                    case 3:
-                        line = board[0] + board[3] + board[6];
-                        break;
-                    case 4:
-                        line = board[1] + board[4] + board[7];
-                        break;
-                    case 5:
-                        line = board[2] + board[5] + board[8];
-                        break;
-                    case 6:
-                        line = board[0] + board[4] + board[8];
-                        break;
-                    case 7:
-                        line = board[2] + board[4] + board[6];
-                        break;
-                }
-
-                if (line.equals("XXX")) {
-                    winnerCombo(i, R.drawable.xwon);
-                    return "laimėjo X";
-                } else if (line.equals("OOO")) {
-                    winnerCombo(i, R.drawable.circlewon);
-                    return "laimėjo O";
-                }
-
-
-            }
-            return null;
-        } else return "Lygiosios";
-    }
-
-
-
-    static void winnerCombo(int i, int resource) {
-        switch (i) {
-            case 0:
-                buttonMap.get(0).setBackgroundResource(resource);
-                buttonMap.get(1).setBackgroundResource(resource);
-                buttonMap.get(2).setBackgroundResource(resource);
-                break;
-            case 1:
-                buttonMap.get(3).setBackgroundResource(resource);
-                buttonMap.get(4).setBackgroundResource(resource);
-                buttonMap.get(5).setBackgroundResource(resource);
-                break;
-            case 2:
-                buttonMap.get(6).setBackgroundResource(resource);
-                buttonMap.get(7).setBackgroundResource(resource);
-                buttonMap.get(8).setBackgroundResource(resource);
-                break;
-            case 3:
-                buttonMap.get(0).setBackgroundResource(resource);
-                buttonMap.get(3).setBackgroundResource(resource);
-                buttonMap.get(6).setBackgroundResource(resource);
-                break;
-            case 4:
-                buttonMap.get(1).setBackgroundResource(resource);
-                buttonMap.get(4).setBackgroundResource(resource);
-                buttonMap.get(7).setBackgroundResource(resource);
-                break;
-            case 5:
-                buttonMap.get(2).setBackgroundResource(resource);
-                buttonMap.get(5).setBackgroundResource(resource);
-                buttonMap.get(8).setBackgroundResource(resource);
-                break;
-            case 6:
-                buttonMap.get(0).setBackgroundResource(resource);
-                buttonMap.get(4).setBackgroundResource(resource);
-                buttonMap.get(8).setBackgroundResource(resource);
-                break;
-            case 7:
-                buttonMap.get(2).setBackgroundResource(resource);
-                buttonMap.get(4).setBackgroundResource(resource);
-                buttonMap.get(6).setBackgroundResource(resource);
-                break;
-        }
-    }
-
-    public void androidTurn() {
-        Random random = new Random();
-        int a = 0;
-        while(a < 9){
-            int i = random.nextInt(8);
-            if (board[i] == null){
-                board[i]= "O";
-                buttonMap.get(i).setBackgroundResource(R.drawable.circle);
-                buttonMap.get(i).setClickable(false);
-                break;
-            }
-            a++;
-        }
-    }
-
-    public void reset(View v) {
-        board = new String[9];
-        for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
-            entry.getValue().setBackgroundResource(R.drawable.empty);
-            entry.getValue().setClickable(true);
-        }
-    }
-
-    public void mainMenu(View v) {
-        startActivity(new Intent(Game.this, MainActivity.class));
-    }
-
-    public void updateCounter(String winner) {
-        if(checkWinner() == "laimėjo X") {
-            countX++;
-        }
-        if(checkWinner() == "laimėjo O") {
-            countO++;
-        }
-        TextView textViewX = (TextView) findViewById(R.id.countxView);
-        TextView textViewO = (TextView) findViewById(R.id.countoView);
-        textViewX.setText(" " + countX);
-        textViewO.setText(" " + countO);
-
-    }
 
 }
+
 
 
 
