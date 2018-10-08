@@ -108,9 +108,10 @@ public class Game extends AppCompatActivity {
     }
 
     public void buttonPress(View gameBoard) {
+
         View pressedButton = findViewById(gameBoard.getId());
 
-       Context context = getApplicationContext();
+
 
 
         if (mode == 0) {
@@ -119,9 +120,9 @@ public class Game extends AppCompatActivity {
 
 
             if (res.checkWinner()== null) {
-                //handler.postDelayed(turnAfterDelay, 200);
-                andr1.turn();
-                res.checkWinner();
+                handler.postDelayed(turnAfterDelay, 200);
+                //andr1.turn();
+               // res.checkWinner();
             }
 
 
@@ -144,18 +145,7 @@ public class Game extends AppCompatActivity {
         }
 
 
-        if(res.checkWinner() != null) {
-
-
-            gameMessage(context, res.checkWinner());
-
-            for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
-                entry.getValue().setClickable(false);
-            }
-
-            updateCounter(res.checkWinner());
-
-        }
+        results();
     }
 
     public void onBackPressed() {
@@ -171,10 +161,25 @@ public class Game extends AppCompatActivity {
         @Override
         public void run() {
             andr1.turn();
+            results();
         }
     };
 
+public void results(){
+    Context context = getApplicationContext();
+    if(res.checkWinner() != null) {
 
+
+        gameMessage(context, res.checkWinner());
+
+        for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
+            entry.getValue().setClickable(false);
+        }
+
+        updateCounter(res.checkWinner());
+
+    }
+}
 
 
 }
