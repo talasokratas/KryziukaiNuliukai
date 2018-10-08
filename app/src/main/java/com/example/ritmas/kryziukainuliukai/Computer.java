@@ -60,27 +60,29 @@ public class Computer extends Game {
     public void hardTurn() {
         Random random = new Random();
         int a = 0;
-        if(!offense()) {
-            if (!defense()) {
-                if (board[4] == null) {
-                    board[4] = symbol;
-                    buttonMap.get(4).setBackgroundResource(image);
-                    buttonMap.get(4).setClickable(false);
-                } else {
-                    while (a < 9) {
-                        int i = random.nextInt(9);
+        if(!offense()){
+        if(!defense()) {
+            if (board[4] == null) {
+                board[4] = symbol;
+                buttonMap.get(4).setBackgroundResource(image);
+                buttonMap.get(4).setClickable(false);
+            } else {
+                while (a < 100) {
+                    int i = random.nextInt(9);
+                    if (i == 0 || i == 2 || i == 6 || i == 8) {
                         if (board[i] == null) {
                             board[i] = symbol;
                             buttonMap.get(i).setBackgroundResource(image);
                             buttonMap.get(i).setClickable(false);
                             break;
                         }
-                        a++;
-
                     }
+                    a++;
                 }
             }
         }
+        }
+
     }
 
     public void mediumTurn() {
