@@ -44,7 +44,7 @@ public class Computer extends Game {
 
         Random random = new Random();
         int a = 0;
-        while(a < 9){
+        while(a < 100){
             int i = random.nextInt(9);
             if (board[i] == null){
                 board[i]= symbol;

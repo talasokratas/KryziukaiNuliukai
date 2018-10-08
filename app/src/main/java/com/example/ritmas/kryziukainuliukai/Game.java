@@ -32,6 +32,7 @@ public class Game extends AppCompatActivity {
     static int buttonCount = 1;
     private Button reset;
     final Handler handler = new Handler();
+    private TextView turn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,9 @@ public class Game extends AppCompatActivity {
             mode = gameMode.getInt("mode");
             level = gameMode.getInt("level");
         }
+
+        twoPlayerModeTurnText();
+
         reset = findViewById(R.id.button0);
 
         reset.setOnClickListener(new View.OnClickListener() {
@@ -51,7 +55,6 @@ public class Game extends AppCompatActivity {
                 resetClicked();
             }
         });
-
 
         board = new String[9];
         countO = 0;
@@ -67,6 +70,7 @@ public class Game extends AppCompatActivity {
             entry.getValue().setBackgroundResource(R.drawable.empty);
             entry.getValue().setClickable(true);
         }
+
     }
 
 
@@ -126,12 +130,15 @@ public class Game extends AppCompatActivity {
 
 
         } else if(mode == 1) {
+
             if (buttonCount == 1) {
                 player1.turn(pressedButton);
                 buttonCount = 2;
+                twoPlayerModeTurnText();
             } else {
                 player2.turn(pressedButton);
                 buttonCount = 1;
+                twoPlayerModeTurnText();
             }
         } else if(mode == 2) {
           while (res.checkWinner() == null) {
@@ -185,6 +192,18 @@ public void results(){
         }
 
         updateCounter(res.checkWinner());
+
+    }
+}
+
+public void twoPlayerModeTurnText(){
+    if (mode == 1) {
+        turn = findViewById(R.id.textView5);
+        if (buttonCount == 1) {
+            turn.setText("DABAR ŽAIDŽIA X");
+        } else if (buttonCount == 2){
+            turn.setText("DABAR ŽAIDŽIA O");
+        }
 
     }
 }
