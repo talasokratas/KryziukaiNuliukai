@@ -135,9 +135,9 @@ public class Game extends AppCompatActivity {
             }
         } else if(mode == 2) {
           while (res.checkWinner() == null) {
-                andr2.turn();
+                andr2.hardTurn();
                 if(res.checkWinner() == null) {
-                    andr1.turn();
+                    andr1.hardTurn();
                     res.checkWinner();
                 }
            }
@@ -149,7 +149,7 @@ public class Game extends AppCompatActivity {
 
     public void onBackPressed() {
         finish();
-        startActivity(new Intent(Game.this, MainActivity.class));
+        startActivity(new Intent(Game.this, SingleMenu.class));
     }
 
     public void mainMenu(View v) {
@@ -159,7 +159,16 @@ public class Game extends AppCompatActivity {
     private Runnable turnAfterDelay = new Runnable() {
         @Override
         public void run() {
-            andr1.turn();
+            if(level == 0) {
+                andr1.easyTurn();
+            } else if (level == 1) {
+                andr1.mediumTurn();
+            }else if (level == 2) {
+                andr1.hardTurn();
+            } else if (level == 3){
+                andr1.easyTurn();
+                andr1.easyTurn();
+            }
             results();
         }
     };
