@@ -2,13 +2,16 @@ package com.example.ritmas.kryziukainuliukai;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.util.TimeUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 public class Game extends AppCompatActivity {
@@ -26,6 +29,7 @@ public class Game extends AppCompatActivity {
     static Results res = new Results();
     static GameTools tools = new GameTools();
     static int buttonCount = 1;
+    private Button reset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,16 @@ public class Game extends AppCompatActivity {
         Bundle gameMode = getIntent().getExtras();
         if(gameMode != null)
             mode = gameMode.getInt("key");
+
+        reset = findViewById(R.id.button0);
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetClicked();
+            }
+        });
+
 
         board = new String[9];
         countO = 0;
@@ -73,7 +87,7 @@ public class Game extends AppCompatActivity {
 
 
 
-    public void reset(View v) {
+    public void resetClicked() {
         board = new String[9];
         for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
             entry.getValue().setBackgroundResource(R.drawable.empty);
@@ -81,9 +95,6 @@ public class Game extends AppCompatActivity {
         }
     }
 
-    public void mainMenu(View v) {
-        startActivity(new Intent(Game.this, MainActivity.class));
-    }
 
     public void updateCounter(String winner) {
         if(winner == "laimėjo X") {
@@ -131,8 +142,11 @@ public class Game extends AppCompatActivity {
         if (mode == 0) {
             player1.turn(pressedButton);
             res.checkWinner();
-            andr1.turn();
-            res.checkWinner();
+            if (res.checkWinner()== null) {
+                andr1.turn();
+                res.checkWinner();
+            }
+
         } else if(mode == 1) {
             if (buttonCount == 1) {
                 player1.turn(pressedButton);
@@ -142,12 +156,13 @@ public class Game extends AppCompatActivity {
                 buttonCount = 1;
             }
         } else if(mode == 2) {
-          // while (res.checkWinner() == null) {
+          while (res.checkWinner() == null) {
                 andr2.turn();
-                res.checkWinner();
-                andr1.turn();
-                res.checkWinner();
-           // }
+                if(res.checkWinner() == null) {
+                    andr1.turn();
+                    res.checkWinner();
+                }
+           }
         }
 
 
@@ -163,6 +178,16 @@ public class Game extends AppCompatActivity {
             updateCounter(res.checkWinner());
 
         }
+    }
+
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(Game.this, MainActivity.class));
+    }
+
+    public void mainMenu(View v) {
+        finish();
+        startActivity(new Intent(Game.this, MainActivity.class));
     }
 
 

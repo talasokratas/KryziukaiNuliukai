@@ -1,6 +1,7 @@
 package com.example.ritmas.kryziukainuliukai;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Computer extends Game {
     String symbol;
@@ -15,7 +16,7 @@ public class Computer extends Game {
         Random random = new Random();
         int a = 0;
         while(a < 9){
-            int i = random.nextInt(8);
+            int i = random.nextInt(9);
             if (board[i] == null){
                 board[i]= symbol;
                 buttonMap.get(i).setBackgroundResource(image);
