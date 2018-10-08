@@ -20,13 +20,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, Game.class);
             Bundle gameMode = new Bundle();
             if (v.getId() == R.id.button0) {
-                gameMode.putInt("key", 0);
+                intent = new Intent(MainActivity.this, SingleMenu.class);
             } else if (v.getId() == R.id.button1) {
-                gameMode.putInt("key", 1);
+                gameMode.putInt("mode", 1);
             } else if (v.getId() == R.id.button2) {
-                gameMode.putInt("key", 2);
-            } else gameMode.putInt("key", 0);
-
+                gameMode.putInt("mode", 2);
+            }
             intent.putExtras(gameMode);
             startActivity(intent);
             finish();

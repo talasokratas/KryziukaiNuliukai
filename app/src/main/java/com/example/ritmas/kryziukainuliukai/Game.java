@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Handler;
-import android.support.v4.util.TimeUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+
 
 
 public class Game extends AppCompatActivity {
@@ -28,8 +27,8 @@ public class Game extends AppCompatActivity {
     static int countX;
     static int countO;
     static int mode = 2;
+    static int level = 0;
     static Results res = new Results();
-    static GameTools tools = new GameTools();
     static int buttonCount = 1;
     private Button reset;
     final Handler handler = new Handler();
@@ -40,9 +39,10 @@ public class Game extends AppCompatActivity {
         setContentView(R.layout.game);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         Bundle gameMode = getIntent().getExtras();
-        if(gameMode != null)
-            mode = gameMode.getInt("key");
-
+        if(gameMode != null) {
+            mode = gameMode.getInt("mode");
+            level = gameMode.getInt("level");
+        }
         reset = findViewById(R.id.button0);
 
         reset.setOnClickListener(new View.OnClickListener() {
@@ -121,8 +121,7 @@ public class Game extends AppCompatActivity {
 
             if (res.checkWinner()== null) {
                 handler.postDelayed(turnAfterDelay, 200);
-                //andr1.turn();
-               // res.checkWinner();
+
             }
 
 
