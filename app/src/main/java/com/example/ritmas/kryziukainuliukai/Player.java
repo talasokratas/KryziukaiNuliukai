@@ -8,7 +8,6 @@ public class Player extends Game{
 
     String symbol;
     int image;
-    String next;
 
     public Player(String symbol, int image) {
         this.symbol = symbol;

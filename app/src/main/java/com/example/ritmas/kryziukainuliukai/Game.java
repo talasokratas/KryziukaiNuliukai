@@ -2,6 +2,7 @@ package com.example.ritmas.kryziukainuliukai;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Handler;
 import android.support.v4.util.TimeUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +38,7 @@ public class Game extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         Bundle gameMode = getIntent().getExtras();
         if(gameMode != null)
             mode = gameMode.getInt("key");
