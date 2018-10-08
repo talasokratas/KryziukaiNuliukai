@@ -2,6 +2,7 @@ package com.example.ritmas.kryziukainuliukai;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.util.TimeUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ public class Game extends AppCompatActivity {
     static GameTools tools = new GameTools();
     static int buttonCount = 1;
     private Button reset;
+    final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,35 +59,6 @@ public class Game extends AppCompatActivity {
 
 
     }
-
-
-
-
-    public void buttonPress1(View gameboard) {
-
-        Context context = getApplicationContext();
-        View pressedButton = findViewById(gameboard.getId());
-
-        //player1.turn(pressedButton);
-        res.checkWinner();
-       //andro1.turn();
-        res.checkWinner();
-
-        if(res.checkWinner() != null) {
-            gameMessage(context, res.checkWinner());
-
-            for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
-                entry.getValue().setClickable(false);
-            }
-           updateCounter(res.checkWinner());
-
-        }
-    }
-
-
-
-
-
 
     public void resetClicked() {
         board = new String[9];
@@ -142,10 +115,14 @@ public class Game extends AppCompatActivity {
         if (mode == 0) {
             player1.turn(pressedButton);
             res.checkWinner();
+
+
             if (res.checkWinner()== null) {
+                //handler.postDelayed(turnAfterDelay, 200);
                 andr1.turn();
                 res.checkWinner();
             }
+
 
         } else if(mode == 1) {
             if (buttonCount == 1) {
@@ -189,7 +166,12 @@ public class Game extends AppCompatActivity {
         finish();
         startActivity(new Intent(Game.this, MainActivity.class));
     }
-
+    private Runnable turnAfterDelay = new Runnable() {
+        @Override
+        public void run() {
+            andr1.turn();
+        }
+    };
 
 
 

@@ -1,18 +1,21 @@
 package com.example.ritmas.kryziukainuliukai;
-
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
+
+
 
 public class Computer extends Game {
     String symbol;
     int image;
 
+
     public Computer(String symbol, int image) {
         this.symbol = symbol;
         this.image = image;
+
     }
 
     public void turn() {
+
         Random random = new Random();
         int a = 0;
         while(a < 9){
@@ -24,6 +27,7 @@ public class Computer extends Game {
                 break;
             }
             a++;
+
         }
     }
 
