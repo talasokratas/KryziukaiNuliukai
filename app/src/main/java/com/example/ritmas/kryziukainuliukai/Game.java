@@ -24,12 +24,12 @@ public class Game extends AppCompatActivity {
     static Computer andr1 = new Computer("O", R.drawable.circle);
     static Computer andr2 = new Computer("X", R.drawable.xgreen);
     static String[] board;
-    static int countX;
-    static int countO;
-    static int mode = 2;
-    static int level = 0;
+    public int countX;
+    public int countO;
+    private int mode;
+    private int level;
     static Results res = new Results();
-    static int buttonCount = 1;
+    private int buttonCount;
     private Button reset;
     final Handler handler = new Handler();
     private TextView turn;
@@ -39,28 +39,15 @@ public class Game extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-        Bundle gameMode = getIntent().getExtras();
-        if(gameMode != null) {
-            mode = gameMode.getInt("mode");
-            level = gameMode.getInt("level");
-        }
-
-        twoPlayerModeTurnText();
-
-        reset = findViewById(R.id.button0);
-
-        reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetClicked();
-            }
-        });
-
+        mode = getMode();
+        level = getLevel();
         board = new String[9];
         countO = 0;
         countX = 0;
+        buttonCount = 1;
         mapViews();
-
+        resetSetup();
+        twoPlayerModeTurnText();
 
     }
 
@@ -112,25 +99,14 @@ public class Game extends AppCompatActivity {
     }
 
     public void buttonPress(View gameBoard) {
-
         View pressedButton = findViewById(gameBoard.getId());
-
-
-
-
         if (mode == 0) {
             player1.turn(pressedButton);
             res.checkWinner();
-
-
             if (res.checkWinner()== null) {
                 handler.postDelayed(turnAfterDelay, 200);
-
             }
-
-
         } else if(mode == 1) {
-
             if (buttonCount == 1) {
                 player1.turn(pressedButton);
                 buttonCount = 2;
@@ -141,13 +117,13 @@ public class Game extends AppCompatActivity {
                 twoPlayerModeTurnText();
             }
         } else if(mode == 2) {
-          while (res.checkWinner() == null) {
-                andr2.hardTurn();
+            while (res.checkWinner() == null) {
+                andr2.mediumTurn();
                 if(res.checkWinner() == null) {
-                    andr1.hardTurn();
+                    andr1.mediumTurn();
                     res.checkWinner();
                 }
-           }
+            }
         }
 
 
@@ -163,6 +139,65 @@ public class Game extends AppCompatActivity {
         finish();
         startActivity(new Intent(Game.this, MainActivity.class));
     }
+
+
+    public void results(){
+        Context context = getApplicationContext();
+        if(res.checkWinner() != null) {
+
+
+            gameMessage(context, res.checkWinner());
+
+            for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
+                entry.getValue().setClickable(false);
+            }
+
+            updateCounter(res.checkWinner());
+
+        }
+    }
+
+    public void twoPlayerModeTurnText(){
+        if (mode == 1) {
+            turn = findViewById(R.id.textView5);
+            if (buttonCount == 1) {
+                turn.setText("DABAR ŽAIDŽIA X");
+            } else if (buttonCount == 2){
+                turn.setText("DABAR ŽAIDŽIA O");
+            }
+
+        }
+    }
+
+    public int getMode(){
+        Bundle gameMode = getIntent().getExtras();
+        if(gameMode != null) {
+           return gameMode.getInt("mode");
+        } else {
+            return 0;
+        }
+    }
+
+    public int getLevel(){
+        Bundle gameMode = getIntent().getExtras();
+        if(gameMode != null) {
+            return gameMode.getInt("level");
+        } else {
+            return 0;
+        }
+    }
+
+    public void resetSetup (){
+        reset = findViewById(R.id.button0);
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetClicked();
+            }
+        });
+    }
+
     private Runnable turnAfterDelay = new Runnable() {
         @Override
         public void run() {
@@ -180,33 +215,6 @@ public class Game extends AppCompatActivity {
         }
     };
 
-public void results(){
-    Context context = getApplicationContext();
-    if(res.checkWinner() != null) {
-
-
-        gameMessage(context, res.checkWinner());
-
-        for(Map.Entry<Integer, View> entry : buttonMap.entrySet()) {
-            entry.getValue().setClickable(false);
-        }
-
-        updateCounter(res.checkWinner());
-
-    }
-}
-
-public void twoPlayerModeTurnText(){
-    if (mode == 1) {
-        turn = findViewById(R.id.textView5);
-        if (buttonCount == 1) {
-            turn.setText("DABAR ŽAIDŽIA X");
-        } else if (buttonCount == 2){
-            turn.setText("DABAR ŽAIDŽIA O");
-        }
-
-    }
-}
 
 
 }

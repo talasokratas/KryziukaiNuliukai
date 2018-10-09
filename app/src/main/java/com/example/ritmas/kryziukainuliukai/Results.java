@@ -1,8 +1,13 @@
 package com.example.ritmas.kryziukainuliukai;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import java.util.Arrays;
 
 public class Results extends Game {
+
+
 
     static String checkWinner() {
             for (int i = 0; i < 8; i++) {
@@ -95,4 +100,5 @@ public class Results extends Game {
                 break;
         }
     }
+
 }

@@ -89,7 +89,7 @@ public class Computer extends Game {
 
         Random random = new Random();
         int chance = random.nextInt(10);
-        if (chance > 8) {
+        if (chance > 7) {
             easyTurn();
         } else {
             hardTurn();
